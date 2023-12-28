@@ -82,8 +82,9 @@ class AVQA_dataset(Dataset):
 
 		self.my_normalize = Compose([
 			# Resize([384,384], interpolation=Image.BICUBIC),
-			Resize([192,192], interpolation=Image.BICUBIC),
+			# Resize([192,192], interpolation=Image.BICUBIC),
 			# Resize([224,224], interpolation=Image.BICUBIC),
+   			Resize([256, 256], interpolation=Image.BICUBIC),
 			# CenterCrop(224),
 			Normalize(IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD),
 		])
@@ -141,12 +142,12 @@ class AVQA_dataset(Dataset):
 
 
 		# fbank = torchaudio.compliance.kaldi.fbank(waveform, htk_compat=True, sample_frequency=sr, use_energy=False, window_type='hanning', num_mel_bins=128, dither=0.0, frame_shift=10) ## original
-		fbank = torchaudio.compliance.kaldi.fbank(waveform, htk_compat=True, sample_frequency=sr, use_energy=False, window_type='hanning', num_mel_bins=192, dither=0.0, frame_shift=10)
-
-
+		# fbank = torchaudio.compliance.kaldi.fbank(waveform, htk_compat=True, sample_frequency=sr, use_energy=False, window_type='hanning', num_mel_bins=192, dither=0.0, frame_shift=10)
+		fbank = torchaudio.compliance.kaldi.fbank(waveform, htk_compat=True, sample_frequency=sr, use_energy=False, window_type='hanning', num_mel_bins=256, dither=0.0, frame_shift=10)
 
 		# target_length = int(1024 * (self.opt.audio_length/10)) ## for audioset: 10s
-		target_length = 192 ## yb: overwrite for swin
+		# target_length = 192 ## yb: overwrite for swin
+		target_length = 256 ## yb: overwrite for swin
 
 		
 		########### ------> very important: audio normalized
@@ -258,7 +259,7 @@ class AVQA_dataset(Dataset):
 		total_audio = []
 		for audio_sec in range(10):
 			
-			fbank, mix_lambda = self._wav2fbank(os.path.join(self.video_res14x14_dir,'raw_audio',name+'.wav'), idx=audio_sec)
+			fbank, mix_lambda = self._wav2fbank(os.path.join(self.video_res14x14_dir,'audio',name+'.wav'), idx=audio_sec)
 			total_audio.append(fbank)
 		total_audio = torch.stack(total_audio)
 		### <----

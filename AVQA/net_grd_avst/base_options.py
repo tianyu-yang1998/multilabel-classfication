@@ -31,7 +31,7 @@ class BaseOptions():
 		self.parser.add_argument(
 			"--label_test", type=str, default="./data/json/avqa-test.json", help="test csv file")
 		self.parser.add_argument(
-			'--batch-size', type=int, default=32, metavar='N', help='input batch size for training (default: 16)')
+			'--batch-size', type=int, default=2, metavar='N', help='input batch size for training (default: 16)')
 		self.parser.add_argument(
 			'--epochs', type=int, default=80, metavar='N', help='number of epochs to train (default: 60)')
 		self.parser.add_argument(
@@ -49,7 +49,7 @@ class BaseOptions():
 		self.parser.add_argument(
 			"--checkpoint", type=str, default='avst', help="save model name")
 		self.parser.add_argument(
-			'--gpu', type=str, default='0,1,2,3,4,5,6,7', help='gpu device number')
+			'--gpu', type=str, default='0', help='gpu device number')
 
 		### for AV-ada ###
 		self.parser.add_argument(
@@ -67,7 +67,7 @@ class BaseOptions():
 		self.parser.add_argument('--Adapter_downsample', type=int, default=16, help="tune top k")
 
 
-		self.parser.add_argument('--num_conv_group', type=int, default=4, help="group conv")
+		self.parser.add_argument('--num_conv_group', type=int, default=3, help="group conv")
 
 
 		self.parser.add_argument('--is_audio_adapter_p1', type=int, default=0, help="TF audio adapter")

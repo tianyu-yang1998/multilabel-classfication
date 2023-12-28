@@ -75,8 +75,10 @@ def train(args, model, train_loader, optimizer, criterion, epoch):
 	model.train()
 	total_qa = 0
 	correct_qa = 0
+	model = model.to("cpu")
 	for batch_idx, sample in enumerate(train_loader):
-		audio,visual_posi,visual_nega, target, question = sample['audio'].to('cuda'), sample['visual_posi'].to('cuda'),sample['visual_nega'].to('cuda'), sample['label'].to('cuda'), sample['question'].to('cuda')
+		# audio,visual_posi,visual_nega, target, question = sample['audio'].to('cuda'), sample['visual_posi'].to('cuda'),sample['visual_nega'].to('cuda'), sample['label'].to('cuda'), sample['question'].to('cuda')
+		audio,visual_posi,visual_nega, target, question = sample['audio'].to('cpu'), sample['visual_posi'].to('cpu'),sample['visual_nega'].to('cpu'), sample['label'].to('cpu'), sample['question'].to('cpu')
 
 		optimizer.zero_grad()
 		out_qa, out_match_posi,out_match_nega = model(audio, visual_posi,visual_nega, question, stage='train')  
@@ -210,7 +212,7 @@ def main():
 
 	if args.model == 'AVQA_Fusion_Net':
 		model = AVQA_Fusion_Net(args)
-		model = nn.DataParallel(model)
+		# model = nn.DataParallel(model)
 		model = model.to('cuda')
 	else:
 		raise ('not recognized')
@@ -229,15 +231,15 @@ def main():
 		pretrained_file = "grounding_gen/models_grounding_gen/main_grounding_gen_best.pt"
 		checkpoint = torch.load(pretrained_file)
 		print("\n-------------- loading pretrained models --------------")
-		model_dict = model.state_dict()
-		tmp = ['module.fc_a1.weight', 'module.fc_a1.bias','module.fc_a2.weight','module.fc_a2.bias','module.fc_gl.weight','module.fc_gl.bias','module.fc1.weight', 'module.fc1.bias','module.fc2.weight', 'module.fc2.bias','module.fc3.weight', 'module.fc3.bias','module.fc4.weight', 'module.fc4.bias']
-		tmp2 = ['module.fc_a1.weight', 'module.fc_a1.bias','module.fc_a2.weight','module.fc_a2.bias']
-		pretrained_dict1 = {k: v for k, v in checkpoint.items() if k in tmp}
-		pretrained_dict2 = {str(k).split('.')[0]+'.'+str(k).split('.')[1]+'_pure.'+str(k).split('.')[-1]: v for k, v in checkpoint.items() if k in tmp2}
+		# model_dict = model.state_dict()
+		# tmp = ['module.fc_a1.weight', 'module.fc_a1.bias','module.fc_a2.weight','module.fc_a2.bias','module.fc_gl.weight','module.fc_gl.bias','module.fc1.weight', 'module.fc1.bias','module.fc2.weight', 'module.fc2.bias','module.fc3.weight', 'module.fc3.bias','module.fc4.weight', 'module.fc4.bias']
+		# tmp2 = ['module.fc_a1.weight', 'module.fc_a1.bias','module.fc_a2.weight','module.fc_a2.bias']
+		# pretrained_dict1 = {k: v for k, v in checkpoint.items() if k in tmp}
+		# pretrained_dict2 = {str(k).split('.')[0]+'.'+str(k).split('.')[1]+'_pure.'+str(k).split('.')[-1]: v for k, v in checkpoint.items() if k in tmp2}
 
-		model_dict.update(pretrained_dict1) #利用预训练模型的参数，更新模型
-		model_dict.update(pretrained_dict2) #利用预训练模型的参数，更新模型
-		model.load_state_dict(model_dict)
+		# model_dict.update(pretrained_dict1) #利用预训练模型的参数，更新模型
+		# model_dict.update(pretrained_dict2) #利用预训练模型的参数，更新模型
+		# model.load_state_dict(model_dict)
 
 		print("\n-------------- load pretrained models --------------")
 

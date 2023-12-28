@@ -260,12 +260,13 @@ class AVQA_Fusion_Net(nn.Module):
 		self.fc4 = nn.Linear(128, 2)
 		self.relu4 = nn.ReLU()
 
-		self.yb_fc_v = nn.Linear(1536, 512)
-		self.yb_fc_a = nn.Linear(1536, 512)
+		self.yb_fc_v = nn.Linear(768, 512)
+		self.yb_fc_a = nn.Linear(768, 512)
 
 		# self.resnet = timm.create_model('resnet18', pretrained=True)
-		self.swin = timm.create_model('swinv2_large_window12_192_22k', pretrained=True)
-
+		# self.swin = timm.create_model('swinv2_large_window12_192_22k', pretrained=True)
+		print(timm.list_models())
+		self.swin = timm.create_model('swinv2_tiny_window8_256', pretrained=True)
 
 		### ------------> for swin 
 		hidden_list = []
@@ -316,7 +317,6 @@ class AVQA_Fusion_Net(nn.Module):
 
 		###### ---------------->
 		f_a = self.swin.patch_embed(audio)
-
 
 		visual_posi = rearrange(visual_posi, 'b t c w h -> (b t) c w h')
 		f_v = self.swin.patch_embed(visual_posi)
